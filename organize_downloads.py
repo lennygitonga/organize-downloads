@@ -52,3 +52,35 @@ def unique_destination(dest: Path) -> Path:
         if not candidate.exists():
             return candidate
         counter += 1
+
+def organize():
+    if not DOWNLOADS_DIR.exists():
+        log.error("Downloads folder not found: %s", DOWNLOADS_DIR)
+        return
+
+    moved = 0
+    skipped = 0
+
+    for item in DOWNLOADS_DIR.iterdir():
+        if item.name.startswith(".") or item.is_dir():
+            skipped += 1
+            continue
+
+        suffix      = item.suffix
+        file_type   = get_file_type(suffix)
+        ext_folder  = suffix.lstrip(".").upper() or "NO_EXT"
+        date_folder = get_date_folder(item)
+
+        dest_dir = DOWNLOADS_DIR / file_type / ext_folder / date_folder
+        dest_dir.mkdir(parents=True, exist_ok=True)
+
+        dest = unique_destination(dest_dir / item.name)
+
+        try:
+            shutil.move(str(item), str(dest))
+            log.info("Moved  %-40s  →  %s", item.name, dest.relative_to(DOWNLOADS_DIR))
+            moved += 1
+        except Exception as exc:
+            log.error("Failed to move %s: %s", item.name, exc)
+
+    log.info("Done. Moved: %d  |  Skipped: %d", moved, skipped)
