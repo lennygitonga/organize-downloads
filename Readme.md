@@ -1,4 +1,4 @@
-# 📁 Downloads Organizer
+# Downloads Organizer
 
 A Python script that automatically sorts your Downloads folder by file type, extension, and date — keeping things tidy without you lifting a finger.
 
@@ -118,3 +118,6 @@ FILE_TYPE_MAP = {
 ```
 
 ---
+## About
+created by
+   : LENNY GITONGA
