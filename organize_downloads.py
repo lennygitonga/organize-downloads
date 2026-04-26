@@ -41,3 +41,14 @@ def get_date_folder(file_path: Path) -> str:
     mtime = file_path.stat().st_mtime
     dt = datetime.fromtimestamp(mtime)
     return dt.strftime("%Y-%m")
+
+def unique_destination(dest: Path) -> Path:
+    if not dest.exists():
+        return dest
+    stem, suffix = dest.stem, dest.suffix
+    counter = 1
+    while True:
+        candidate = dest.parent / f"{stem}_{counter}{suffix}"
+        if not candidate.exists():
+            return candidate
+        counter += 1
