@@ -36,3 +36,8 @@ def get_file_type(suffix: str) -> str:
         if suffix in extensions:
             return category
     return "Other"
+
+def get_date_folder(file_path: Path) -> str:
+    mtime = file_path.stat().st_mtime
+    dt = datetime.fromtimestamp(mtime)
+    return dt.strftime("%Y-%m")
