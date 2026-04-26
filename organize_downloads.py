@@ -16,6 +16,7 @@ FILE_TYPE_MAP = {
     "Executables": [".exe", ".dmg", ".pkg", ".deb", ".apk"],
 }
 
+# Logging setup
 LOG_FILE = Path.home() / ".downloads_organizer.log"
 
 logging.basicConfig(
@@ -30,18 +31,20 @@ logging.basicConfig(
 
 log = logging.getLogger(__name__)
 
+# Functions
+# Determine the file type based on its extension using the FILE_TYPE_MAP. If no match is found, return "Other"
 def get_file_type(suffix: str) -> str:
     suffix = suffix.lower()
     for category, extensions in FILE_TYPE_MAP.items():
         if suffix in extensions:
             return category
     return "Other"
-
+# Get the modification date of the file and return a folder name in "YYYY-MM" format
 def get_date_folder(file_path: Path) -> str:
     mtime = file_path.stat().st_mtime
     dt = datetime.fromtimestamp(mtime)
     return dt.strftime("%Y-%m")
-
+# If a file with the same name already exists in the destination, append a counter to the filename to make it unique
 def unique_destination(dest: Path) -> Path:
     if not dest.exists():
         return dest
@@ -53,6 +56,7 @@ def unique_destination(dest: Path) -> Path:
             return candidate
         counter += 1
 
+# Main function
 def organize():
     if not DOWNLOADS_DIR.exists():
         log.error("Downloads folder not found: %s", DOWNLOADS_DIR)
@@ -84,3 +88,9 @@ def organize():
             log.error("Failed to move %s: %s", item.name, exc)
 
     log.info("Done. Moved: %d  |  Skipped: %d", moved, skipped)
+
+# Entry point
+if __name__ == "__main__":
+     log.info("─── Downloads Organizer started ───")
+     organize()
+     log.info("─── Downloads Organizer finished ──")
