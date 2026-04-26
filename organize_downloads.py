@@ -29,3 +29,10 @@ logging.basicConfig(
 )
 
 log = logging.getLogger(__name__)
+
+def get_file_type(suffix: str) -> str:
+    suffix = suffix.lower()
+    for category, extensions in FILE_TYPE_MAP.items():
+        if suffix in extensions:
+            return category
+    return "Other"
